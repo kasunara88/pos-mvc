@@ -4,17 +4,30 @@
  */
 package pos.mvc.view;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import pos.mvc.controller.ItemController;
+import pos.mvc.model.ItemModel;
+
 /**
  *
  * @author kasun
  */
 public class ItemView extends javax.swing.JFrame {
 
+    private ItemController itemController;
+
     /**
      * Creates new form ItemView
      */
     public ItemView() {
+        itemController = new ItemController();
         initComponents();
+        loadAllItem();
     }
 
     /**
@@ -42,7 +55,7 @@ public class ItemView extends javax.swing.JFrame {
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        itemTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,7 +66,7 @@ public class ItemView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Consolas", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Item Manage");
+        jLabel1.setText("Manage Item ");
 
         jLabel2.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         jLabel2.setText("Item Code");
@@ -84,7 +97,7 @@ public class ItemView extends javax.swing.JFrame {
         deleteButton.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         deleteButton.setText("Delete");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        itemTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -95,7 +108,12 @@ public class ItemView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        itemTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(itemTable);
 
         javax.swing.GroupLayout kGradientPanel1Layout = new javax.swing.GroupLayout(kGradientPanel1);
         kGradientPanel1.setLayout(kGradientPanel1Layout);
@@ -108,8 +126,8 @@ public class ItemView extends javax.swing.JFrame {
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(kGradientPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(itemCode_Text, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(kGradientPanel1Layout.createSequentialGroup()
@@ -144,7 +162,7 @@ public class ItemView extends javax.swing.JFrame {
             .addGroup(kGradientPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(kGradientPanel1Layout.createSequentialGroup()
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,9 +187,9 @@ public class ItemView extends javax.swing.JFrame {
                         .addGroup(kGradientPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(saveButton)
                             .addComponent(updateButton)
-                            .addComponent(deleteButton)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                            .addComponent(deleteButton))
+                        .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -191,6 +209,10 @@ public class ItemView extends javax.swing.JFrame {
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         saveItem();
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void itemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemTableMouseClicked
+        searchItem();
+    }//GEN-LAST:event_itemTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -231,6 +253,7 @@ public class ItemView extends javax.swing.JFrame {
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField description_Text;
     private javax.swing.JTextField itemCode_Text;
+    private javax.swing.JTable itemTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -238,7 +261,6 @@ public class ItemView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private keeptoo.KGradientPanel kGradientPanel1;
     private javax.swing.JTextField packSize_Text;
     private javax.swing.JTextField qtyOnHand_Text;
@@ -247,7 +269,65 @@ public class ItemView extends javax.swing.JFrame {
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 
+    //private void saveItem() {
+       // ItemModel itemModel = new ItemModel(itemCode_Text.getText(),
+                //description_Text.getText(),
+                //packSize_Text.getText(),
+                //Double.parseDouble(unitPrize_Text.getText()),
+                //int)
+    //}
+
+    private void loadAllItem() {
+        try {
+            String[] column = {"Item", "Description", "Pack Size", "Unit Price", "Qty"};
+            DefaultTableModel dtm = new DefaultTableModel(column, 0) {
+                
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            
+            itemTable.setModel(dtm);
+            ArrayList<ItemModel> item = itemController.getAllItem();
+            
+            for(ItemModel items : item){
+                Object[] rawData = {items.getItemCode(),items.getDescription(),items.getPacksize(),items.getUnitprice(),items.getQtyOnHand()};
+                dtm.addRow(rawData);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+
     private void saveItem() {
+        ItemModel itemModel = new ItemModel(itemCode_Text.getText(),
+                description_Text.getText(),
+                packSize_Text.getText(), Double.parseDouble(unitPrize_Text.getText()), 
+                Integer.parseInt(qtyOnHand_Text.getText()));
+        
+        try {
+            String resp = itemController.saveItem(itemModel);
+            JOptionPane.showMessageDialog(this, resp);
+            clear();
+            loadAllItem();
+        } catch (SQLException ex) {
+            Logger.getLogger(ItemView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+            
+    }
+    
+    private void clear(){
+        itemCode_Text.setText("");
+        description_Text.setText("");
+        packSize_Text.setText("");
+        unitPrize_Text.setText("");
+        qtyOnHand_Text.setText("");
+    }
+
+    private void searchItem() {
         
     }
 }
