@@ -106,7 +106,7 @@
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="updateOrderButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="placeOrderButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -157,7 +157,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jScrollPane3" pref="228" max="32767" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="updateOrderButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="placeOrderButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -223,7 +223,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="discount_Text">
         </Component>
-        <Component class="javax.swing.JButton" name="updateOrderButton">
+        <Component class="javax.swing.JButton" name="placeOrderButton">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Consolas" size="18" style="1"/>

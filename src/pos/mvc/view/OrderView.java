@@ -5,7 +5,9 @@
 package pos.mvc.view;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -13,8 +15,10 @@ import javax.swing.table.DefaultTableModel;
 import pos.mvc.model.CustomerModel;
 import pos.mvc.controller.CustomerController;
 import pos.mvc.controller.ItemController;
+import pos.mvc.controller.OrderController;
 import pos.mvc.model.ItemModel;
 import pos.mvc.model.OrderDetailModel;
+import pos.mvc.model.OrderModel;
 
 /**
  *
@@ -25,6 +29,7 @@ public class OrderView extends javax.swing.JFrame {
     CustomerController customerController;
     ItemController itemController;
     ArrayList<OrderDetailModel> oderDetailModels = new ArrayList<>();
+    OrderController orderController;
 
     /**
      * Creates new form OrderView
@@ -32,6 +37,7 @@ public class OrderView extends javax.swing.JFrame {
     public OrderView() {
         customerController = new CustomerController();
         itemController = new ItemController();
+        orderController = new OrderController();
         initComponents();
         laddTable();
     }
@@ -57,7 +63,7 @@ public class OrderView extends javax.swing.JFrame {
         qty_Text = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         discount_Text = new javax.swing.JTextField();
-        updateOrderButton = new javax.swing.JButton();
+        placeOrderButton = new javax.swing.JButton();
         addItemBttn = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         orderTable = new javax.swing.JTable();
@@ -92,10 +98,10 @@ public class OrderView extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         jLabel18.setText("Discount");
 
-        updateOrderButton.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        updateOrderButton.setText("Place Order");
-        updateOrderButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        updateOrderButton.addActionListener(new java.awt.event.ActionListener() {
+        placeOrderButton.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
+        placeOrderButton.setText("Place Order");
+        placeOrderButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        placeOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
             }
@@ -195,7 +201,7 @@ public class OrderView extends javax.swing.JFrame {
                         .addGap(186, 186, 186))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kGradientPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(updateOrderButton)))
+                        .addComponent(placeOrderButton)))
                 .addContainerGap())
             .addComponent(jScrollPane3)
         );
@@ -234,7 +240,7 @@ public class OrderView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(updateOrderButton)
+                .addComponent(placeOrderButton)
                 .addContainerGap())
         );
 
@@ -261,7 +267,7 @@ public class OrderView extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-
+        placeOrder();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void searchCustdeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchCustdeleteButtonActionPerformed
@@ -322,12 +328,12 @@ public class OrderView extends javax.swing.JFrame {
     private keeptoo.KGradientPanel kGradientPanel4;
     private javax.swing.JTextField orderId_Text;
     private javax.swing.JTable orderTable;
+    private javax.swing.JButton placeOrderButton;
     private javax.swing.JTextField qty_Text;
     private javax.swing.JButton searchCust;
     private javax.swing.JLabel searchCustIdLebel;
     private javax.swing.JButton searchItem;
     private javax.swing.JLabel searchItemCode;
-    private javax.swing.JButton updateOrderButton;
     // End of variables declaration//GEN-END:variables
 
     private void searchCustomer() {
@@ -379,8 +385,8 @@ public class OrderView extends javax.swing.JFrame {
                 Integer.parseInt(qty_Text.getText()),
                 Integer.parseInt(discount_Text.getText()));
         oderDetailModels.add(odm);
-        
-        Object[] rawData ={odm.getItemCode(),odm.getOrderQty(),odm.getDiscount()};
+
+        Object[] rawData = {odm.getItemCode(), odm.getOrderQty(), odm.getDiscount()};
         DefaultTableModel dtm = (DefaultTableModel) orderTable.getModel();
         dtm.addRow(rawData);
         cleanItemData();
@@ -392,5 +398,26 @@ public class OrderView extends javax.swing.JFrame {
         qty_Text.setText("");
         discount_Text.setText("");
         searchItemCode.setText("");
+    }
+
+    private void placeOrder() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            OrderModel orderModel = new OrderModel(orderId_Text.getText(), sdf.format(new Date()), customerId_Text.getText());
+
+            String result = orderController.placeOrder(orderModel, oderDetailModels);
+            JOptionPane.showMessageDialog(this, result);
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        clearForm();
+    }
+
+    private void clearForm() {
+        laddTable();
+        orderId_Text.setText("");
+        customerId_Text.setText("");
+        searchCustIdLebel.setText("");
     }
 }
